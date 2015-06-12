@@ -32,8 +32,11 @@ tr.exportTo('tr.model', function() {
     tr.model.EventContainer.call(this);
 
     this.bounds = new tr.b.Range();
-    this.counters_ = {};
     this.guid = tr.b.GUID.allocate();
+
+    // Counter measuring the instantaneous power consumption of the device,
+    // measured in mWh
+    this.powerCounter = new Counter(this, 'device.Power', 'device', 'Power');
   };
 
   Device.compare = function(x, y) {
@@ -60,7 +63,7 @@ tr.exportTo('tr.model', function() {
     },
 
     get counters() {
-      return this.counters_;
+      return [this.powerCounter];
     },
 
     getSettingsKey: function() {
@@ -83,7 +86,7 @@ tr.exportTo('tr.model', function() {
     },
 
     addCategoriesToDict: function(categoriesDict) {
-      for (var id in this.counters_)
+      for (var id in this.counters)
         categoriesDict[this.counters[id].category] = true;
     },
 
@@ -92,19 +95,8 @@ tr.exportTo('tr.model', function() {
     },
 
     iterateAllChildEventContainers: function(callback, opt_this) {
-      for (var id in this.counters_)
+      for (var id in this.counters)
         callback.call(opt_this, this.counters[id]);
-    },
-
-    /**
-     * @return {Counter} The counter on this device with the given category/name
-     * combination, creating it if it doesn't exist.
-     */
-    getOrCreateCounter: function(cat, name) {
-      var id = cat + '.' + name;
-      if (!this.counters[id])
-        this.counters[id] = new Counter(this, id, cat, name);
-      return this.counters[id];
     }
   };
 

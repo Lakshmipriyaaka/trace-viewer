@@ -101,19 +101,5 @@ tr.b.unittest.testSuite(function() {
 
     assert.deepEqual(actualIds, expectedIds);
   });
-
-  test('getOrCreateCounter', function() {
-    var device = new Device(new Model());
-    var ctr1 = device.getOrCreateCounter('cat1', 'name1');
-    var ctr2 = device.getOrCreateCounter('cat1', 'name2');
-    var ctr3 = device.getOrCreateCounter('cat2', 'name1');
-
-    var expected = {
-      'cat1.name1': ctr1,
-      'cat1.name2': ctr2,
-      'cat2.name1': ctr3
-    };
-    assert.deepEqual(device.counters, expected);
-  });
 });
 </script>
