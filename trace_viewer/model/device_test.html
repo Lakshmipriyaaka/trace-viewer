@@ -22,49 +22,49 @@ tr.b.unittest.testSuite(function() {
 
   test('updateBounds', function() {
     var device = new Device(new Model());
-    
+
     // Verify that the bounds match the lowest and highest counters
     var ctr1 = device.getOrCreateCounter('cat', 'ctr1');
     var series1 = new CounterSeries('a', 0);
     ctr1.addSeries(series1);
     series1.addCounterSample(100, 5);
     series1.addCounterSample(200, 5);
-    
+
     var ctr2 = device.getOrCreateCounter('cat', 'ctr2');
     var series2 = new CounterSeries('b', 0);
     ctr2.addSeries(series2);
     series2.addCounterSample(400, 5);
-    
+
     device.updateBounds();
-    
+
     assert.equal(device.bounds.min, 100);
     assert.equal(device.bounds.max, 400);
-    
+
     // Add a new value and verify that the bounds change
     series2.addCounterSample(700, 5);
-    
+
     device.updateBounds();
-    
+
     assert.equal(device.bounds.max, 700);
  });
 
   test('shiftTimestampsForward', function() {
     var device = new Device(new Model());
-    
+
     var ctr1 = device.getOrCreateCounter('cat', 'ctr1');
     var series1 = new CounterSeries('a', 0);
     ctr1.addSeries(series1);
     series1.addCounterSample(100, 5);
     series1.addCounterSample(200, 5);
-    
+
     // Add a second counter to verify that all counters are shifted
     var ctr2 = device.getOrCreateCounter('cat', 'ctr2');
     var series2 = new CounterSeries('b', 0);
     ctr2.addSeries(series2);
     series2.addCounterSample(300, 5);
-    
+
     device.shiftTimestampsForward(5);
-    
+
     assert.equal(ctr1.series[0].samples[0].timestamp, 105);
     assert.equal(ctr1.series[0].samples[1].timestamp, 205);
     assert.equal(ctr2.series[0].samples[0].timestamp, 305);
@@ -117,4 +117,3 @@ tr.b.unittest.testSuite(function() {
   });
 });
 </script>
-
