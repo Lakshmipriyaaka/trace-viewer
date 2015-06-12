@@ -8,7 +8,8 @@ found in the LICENSE file.
 <link rel="import" href="/base/unittest/suite_loader.html">
 <link rel="import" href="/base/unittest/test_runner.html">
 <link rel="import" href="/base/unittest/html_test_results.html">
-<link rel="stylesheet" href="/base/unittest/common.css">
+<link rel="import" href="/ui/utils.html">
+
 <style>
   x-base-interactive-test-runner {
     display: -webkit-flex;
@@ -61,6 +62,34 @@ found in the LICENSE file.
     min-height: 0;
     overflow: auto;
     padding: 0 4px 0 4px;
+  }
+
+  .unittest-pending {
+    color: orange;
+  }
+  .unittest-running {
+    color: orange;
+    font-weight: bold;
+  }
+
+  .unittest-passed {
+    color: darkgreen;
+  }
+
+  .unittest-failed {
+    color: darkred;
+    font-weight: bold;
+  }
+
+  .unittest-exception {
+    color: red;
+    font-weight: bold;
+  }
+
+  .unittest-failure {
+    border: 1px solid grey;
+    border-radius: 5px;
+    padding: 5px;
   }
 </style>
 
@@ -130,8 +159,7 @@ tr.exportTo('tr.b.unittest', function() {
       this.onTestFailed_ = this.onTestFailed_.bind(this);
       this.onTestPassed_ = this.onTestPassed_.bind(this);
 
-
-      this.appendChild(tr.b.instantiateTemplate(
+      this.appendChild(tr.ui.instantiateTemplate(
           '#x-base-interactive-test-runner-template', THIS_DOC));
 
       this.querySelector(
