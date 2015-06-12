@@ -13,15 +13,12 @@ found in the LICENSE file.
 <script>
 'use strict';
 
-/**
- * @fileoverview Provides the Device class.
- */
 tr.exportTo('tr.model', function() {
 
   var Counter = tr.model.Counter;
 
   /**
-   * Device represents the device-level objects in the model.
+   * Device represents the device-level data in the model.
    * @constructor
      @extends {tr.model.EventContainer}
    */
@@ -36,7 +33,7 @@ tr.exportTo('tr.model', function() {
 
     // Counter measuring the instantaneous power consumption of the device,
     // measured in mWh
-    this.powerCounter = new Counter(this, 'device.Power', 'device', 'Power');
+    this.powerCounter_ = new Counter(this, 'device.Power', 'device', 'Power');
   };
 
   Device.compare = function(x, y) {
@@ -66,6 +63,10 @@ tr.exportTo('tr.model', function() {
       return [this.powerCounter];
     },
 
+    get powerCounter() {
+      return this.powerCounter_;
+    },
+
     getSettingsKey: function() {
       return 'device';
     },
@@ -73,21 +74,16 @@ tr.exportTo('tr.model', function() {
     updateBounds: function() {
       this.bounds.reset();
 
-      this.iterateAllChildEventContainers(function(child) {
-        child.updateBounds();
-        this.bounds.addRange(child.bounds);
-      }, this);
+      this.powerCounter.updateBounds();
+      this.bounds.addRange(this.powerCounter.bounds);
     },
 
     shiftTimestampsForward: function(amount) {
-      this.iterateAllChildEventContainers(function(child) {
-        child.shiftTimestampsForward(amount);
-      });
+      this.powerCounter.shiftTimestampsForward(amount);
     },
 
     addCategoriesToDict: function(categoriesDict) {
-      for (var id in this.counters)
-        categoriesDict[this.counters[id].category] = true;
+      categoriesDict[this.powerCounter.category] = true;
     },
 
     iterateAllEventsInThisContainer: function(eventTypePredicate,
@@ -95,8 +91,7 @@ tr.exportTo('tr.model', function() {
     },
 
     iterateAllChildEventContainers: function(callback, opt_this) {
-      for (var id in this.counters)
-        callback.call(opt_this, this.counters[id]);
+      callback.call(opt_this, this.powerCounter);
     }
   };
 
