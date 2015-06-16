@@ -7,6 +7,7 @@ found in the LICENSE file.
 
 <link rel="import" href="/core/tracks/highlighter.html">
 <link rel="import" href="/core/tracks/container_track.html">
+<link rel="import" href="/core/tracks/device_track.html">
 <link rel="import" href="/core/tracks/kernel_track.html">
 <link rel="import" href="/core/tracks/alert_track.html">
 <link rel="import" href="/core/tracks/global_memory_dump_track.html">
@@ -147,6 +148,7 @@ tr.exportTo('tr.c.tracks', function() {
         this.appendChild(gmdt);
       }
 
+      this.appendDeviceTrack_();
       this.appendKernelTrack_();
 
       // Get a sorted list of processes.
@@ -204,6 +206,15 @@ tr.exportTo('tr.c.tracks', function() {
       var tracks = this.children;
       for (var i = 0; i < tracks.length; ++i)
         tracks[i].addContainersToTrackMap(containerToTrackMap);
+    },
+
+    appendDeviceTrack_: function() {
+      var device = this.model.device;
+      var track = new tr.c.tracks.DeviceTrack(this.viewport);
+      track.device = this.model.device;
+      if (!track.hasVisibleContent)
+        return;
+      this.appendChild(track);
     },
 
     appendKernelTrack_: function() {

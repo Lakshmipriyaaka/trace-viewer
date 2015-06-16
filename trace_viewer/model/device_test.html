@@ -22,7 +22,8 @@ tr.b.unittest.testSuite(function() {
 
   test('updateBounds', function() {
     var device = new Device(new Model());
-
+    device.powerCounter =
+        new Counter(device, 'device.Power', 'device', 'Power');
     // Verify that the bounds match the lowest and highest counters
     var series = new CounterSeries('a', 0);
     device.powerCounter.addSeries(series);
@@ -44,7 +45,10 @@ tr.b.unittest.testSuite(function() {
 
   test('shiftTimestampsForward', function() {
     var device = new Device(new Model());
- 
+
+    device.powerCounter =
+        new Counter(device, 'device.Power', 'device', 'Power');
+    
     var series = new CounterSeries('a', 0);
     device.powerCounter.addSeries(series);
     series.addCounterSample(100, 5);
@@ -59,6 +63,9 @@ tr.b.unittest.testSuite(function() {
   test('addCategoriesToDict', function() {
     var device = new Device(new Model());
 
+    device.powerCounter =
+        new Counter(device, 'device.Power', 'device', 'Power');
+    
     var expectedDict = {
       'device': true,
     };
@@ -71,6 +78,19 @@ tr.b.unittest.testSuite(function() {
   test('iterateAllChildEventContainers', function() {
     var device = new Device(new Model());
 
+    // Doesn't include the power counter if no one has accessed it
+    var expectedIds = [];
+    var actualIds = [];
+    device.iterateAllChildEventContainers(function(child) {
+      actualIds.push(child.id);
+    });
+
+    assert.deepEqual(actualIds, expectedIds);
+
+    // Access the power counter to lazily initialize it
+    device.powerCounter =
+        new Counter(device, 'device.Power', 'device', 'power');
+    
     var expectedIds = ['device.Power'];
     var actualIds = [];
     device.iterateAllChildEventContainers(function(child) {

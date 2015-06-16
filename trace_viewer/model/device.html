@@ -31,9 +31,9 @@ tr.exportTo('tr.model', function() {
     this.bounds = new tr.b.Range();
     this.guid = tr.b.GUID.allocate();
 
-    // Counter measuring the instantaneous power consumption of the device,
-    // measured in mWh
-    this.powerCounter_ = new Counter(this, 'device.Power', 'device', 'Power');
+    // Lazy-constructed counter measuring the instantaneous power consumption
+    // of the device, measured in mWh.
+    this.powerCounter_ = null;
   };
 
   Device.compare = function(x, y) {
@@ -60,13 +60,17 @@ tr.exportTo('tr.model', function() {
     },
 
     get counters() {
-      return [this.powerCounter];
+      return this.powerCounter_ ? [this.powerCounter_] : [];
     },
 
     get powerCounter() {
       return this.powerCounter_;
     },
 
+    set powerCounter(powerCounter) {
+      this.powerCounter_ = powerCounter;
+    },
+    
     getSettingsKey: function() {
       return 'device';
     },
@@ -74,16 +78,21 @@ tr.exportTo('tr.model', function() {
     updateBounds: function() {
       this.bounds.reset();
 
-      this.powerCounter.updateBounds();
-      this.bounds.addRange(this.powerCounter.bounds);
+      this.iterateAllChildEventContainers(function(child) {
+        child.updateBounds();
+        this.bounds.addRange(child.bounds);
+      }, this);
     },
 
     shiftTimestampsForward: function(amount) {
-      this.powerCounter.shiftTimestampsForward(amount);
+      this.iterateAllChildEventContainers(function(child) {
+        child.shiftTimestampsForward();
+      });
     },
 
     addCategoriesToDict: function(categoriesDict) {
-      categoriesDict[this.powerCounter.category] = true;
+      for (var counter in this.counters)
+        categoriesDict[counter.category] = true;
     },
 
     iterateAllEventsInThisContainer: function(eventTypePredicate,
@@ -91,7 +100,9 @@ tr.exportTo('tr.model', function() {
     },
 
     iterateAllChildEventContainers: function(callback, opt_this) {
-      callback.call(opt_this, this.powerCounter);
+      this.counters.forEach(function(counter) {
+        callback.call(opt_this, counter);
+      });
     }
   };
 
