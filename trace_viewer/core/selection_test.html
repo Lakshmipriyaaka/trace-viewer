@@ -5,11 +5,11 @@ Use of this source code is governed by a BSD-style license that can be
 found in the LICENSE file.
 -->
 
-<link rel="import" href="/core/timeline_viewport.html">
+<link rel="import" href="/ui/timeline_viewport.html">
 <link rel="import" href="/core/test_utils.html">
 <link rel="import" href="/core/selection.html">
-<link rel="import" href="/core/tracks/slice_track.html">
-<link rel="import" href="/core/tracks/drawing_container.html">
+<link rel="import" href="/ui/tracks/slice_track.html">
+<link rel="import" href="/ui/tracks/drawing_container.html">
 <link rel="import" href="/model/model.html">
 
 <script>
@@ -50,8 +50,8 @@ tr.b.unittest.testSuite(function() {
     t1.sliceGroup.pushSlice(
         new tr.model.ThreadSlice('', 'a', 0, 5, {}, 1));
 
-    var viewport = new tr.c.TimelineViewport();
-    var track = new tr.c.tracks.SliceTrack(viewport);
+    var viewport = new tr.ui.TimelineViewport();
+    var track = new tr.ui.tracks.SliceTrack(viewport);
     viewport.modelTrackContainer = track;
     track.slices = t1.sliceGroup.slices;
 

@@ -10,10 +10,10 @@ found in the LICENSE file.
 <link rel="import" href="/extras/chrome/cc/constants.html">
 <link rel="import" href="/extras/chrome/cc/layer_tree_quad_stack_view.html">
 <link rel="import" href="/extras/chrome/cc/picture.html">
-<link rel="import" href="/base/raf.html">
 <link rel="import" href="/base/settings.html">
-<link rel="import" href="/ui/base/drag_handle.html">
 <link rel="import" href="/base/units/util.html">
+<link rel="import" href="/ui/base/raf.html">
+<link rel="import" href="/ui/base/drag_handle.html">
 
 <script>
 'use strict';
@@ -28,7 +28,7 @@ tr.exportTo('tr.e.cc', function() {
   /**
    * @constructor
    */
-  var LayerView = tr.ui.define('layer-view');
+  var LayerView = tr.ui.b.define('layer-view');
 
   LayerView.prototype = {
     __proto__: HTMLUnknownElement.prototype,
@@ -108,7 +108,7 @@ tr.exportTo('tr.e.cc', function() {
       if (!(pictures instanceof Array))
         pictures = [pictures];
 
-      var link = document.createElement('tr-c-a-analysis-link');
+      var link = document.createElement('tr-ui-a-analysis-link');
       link.selection = function() {
         var layeredPicture = new tr.e.cc.LayeredPicture(pictures);
         var snapshot = new tr.e.cc.PictureSnapshot(layeredPicture);

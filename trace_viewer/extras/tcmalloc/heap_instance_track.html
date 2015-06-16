@@ -6,11 +6,12 @@ found in the LICENSE file.
 -->
 
 <link rel="stylesheet" href="/extras/tcmalloc/heap_instance_track.css">
-<link rel="import" href="/core/tracks/stacked_bars_track.html">
-<link rel="import" href="/core/tracks/object_instance_track.html">
+
+<link rel="import" href="/ui/tracks/stacked_bars_track.html">
+<link rel="import" href="/ui/tracks/object_instance_track.html">
 <link rel="import" href="/core/event_presenter.html">
 <link rel="import" href="/base/sorted_array_utils.html">
-<link rel="import" href="/ui/ui.html">
+<link rel="import" href="/ui/base/ui.html">
 
 <script>
 'use strict';
@@ -24,15 +25,15 @@ tr.exportTo('tr.e.tcmalloc', function() {
    * @extends {StackedBarsTrack}
    */
 
-  var HeapInstanceTrack = tr.ui.define(
-      'heap-instance-track', tr.c.tracks.StackedBarsTrack);
+  var HeapInstanceTrack = tr.ui.b.define(
+      'heap-instance-track', tr.ui.tracks.StackedBarsTrack);
 
   HeapInstanceTrack.prototype = {
 
-    __proto__: tr.c.tracks.StackedBarsTrack.prototype,
+    __proto__: tr.ui.tracks.StackedBarsTrack.prototype,
 
     decorate: function(viewport) {
-      tr.c.tracks.StackedBarsTrack.prototype.decorate.call(this, viewport);
+      tr.ui.tracks.StackedBarsTrack.prototype.decorate.call(this, viewport);
       this.classList.add('heap-instance-track');
       this.objectInstance_ = null;
     },
@@ -76,7 +77,7 @@ tr.exportTo('tr.e.tcmalloc', function() {
 
     draw: function(type, viewLWorld, viewRWorld) {
       switch (type) {
-        case tr.c.tracks.DrawType.GENERAL_EVENT:
+        case tr.ui.tracks.DrawType.GENERAL_EVENT:
           this.drawEvents_(viewLWorld, viewRWorld);
           break;
       }
@@ -165,7 +166,7 @@ tr.exportTo('tr.e.tcmalloc', function() {
     }
   };
 
-  tr.c.tracks.ObjectInstanceTrack.register(
+  tr.ui.tracks.ObjectInstanceTrack.register(
       HeapInstanceTrack,
       {typeName: 'memory::Heap'});
 

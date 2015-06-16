@@ -8,8 +8,8 @@ found in the LICENSE file.
 <link rel="import" href="/core/constants.html">
 <link rel="import" href="/core/selection.html">
 <link rel="import" href="/base/range.html">
-<link rel="import" href="/ui/ui.html">
 <link rel="import" href="/model/slice.html">
+<link rel="import" href="/ui/base/ui.html">
 
 <script>
 'use strict';
@@ -60,9 +60,9 @@ tr.exportTo('tr.c', function() {
         return;
       var ir = this.viewport_.interestRange;
       if (ir.min === pt.x)
-        ir.leftSnapIndicator = new tr.c.SnapIndicator(pt.y, pt.height);
+        ir.leftSnapIndicator = new tr.ui.SnapIndicator(pt.y, pt.height);
       if (ir.max === pt.x)
-        ir.rightSnapIndicator = new tr.c.SnapIndicator(pt.y, pt.height);
+        ir.rightSnapIndicator = new tr.ui.SnapIndicator(pt.y, pt.height);
     },
 
     onUpdateTiming: function(e) {
