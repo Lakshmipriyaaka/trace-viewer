@@ -24,6 +24,7 @@ tr.exportTo('tr.e.importer.battor', function() {
 
   var Counter = tr.model.Counter;
   var Importer = tr.importer.Importer;
+  var PowerSample = tr.model.PowerSample;
 
   /**
    * Imports linux perf events into a specified model.
@@ -141,7 +142,7 @@ tr.exportTo('tr.e.importer.battor', function() {
           var time = parseFloat(groups[1]) + minTs;
           var voltage_mV = parseFloat(groups[2]);
           var current_mA = parseFloat(groups[3]);
-          var power_mW = (voltage_mV * current_mA) / 1000);
+          var power_mW = (voltage_mV * current_mA) / 1000;
 
           series.addSample(new PowerSample(series, time, power_mW));
         }
