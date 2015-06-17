@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<!--
+Copyright (c) 2015 The Chromium Authors. All rights reserved.
+Use of this source code is governed by a BSD-style license that can be
+found in the LICENSE file.
+-->
+
+<link rel="import" href="/model/counter_sample.html">
+<link rel="import" href="/model/event.html">
+
+<script>
+'use strict';
+
+tr.exportTo('tr.model', function() {
+
+  function PowerSample(series, timestamp, value) {
+    tr.model.CounterSample.call(this, series, timestamp, value);
+  }
+  
+  PowerSample.prototype = {
+    __proto__: tr.model.CounterSample.prototype,
+  };
+
+  // TODO(charliea): Create a special view for when PowerSamples are
+  // selected.
+  tr.model.EventRegistry.register(
+      PowerSample,
+      {
+        name: 'powerSample',
+        pluralName: 'powerSamples',
+        singleViewElementName: 'tr-c-a-counter-sample-sub-view',
+        multiViewElementName: 'tr-c-a-counter-sample-sub-view'
+      });
+
+  return {
+    PowerSample: PowerSample
+  };
+});
+</script>
+
