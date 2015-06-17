@@ -83,13 +83,13 @@ tr.exportTo('tr.model', function() {
 
     shiftTimestampsForward: function(amount) {
       this.iterateAllChildEventContainers(function(child) {
-        child.shiftTimestampsForward();
+        child.shiftTimestampsForward(amount);
       });
     },
 
     addCategoriesToDict: function(categoriesDict) {
-      for (var counter in this.counters)
-        categoriesDict[counter.category] = true;
+      for (var id in this.counters)
+        categoriesDict[this.counters[id].category] = true;
     },
 
     iterateAllEventsInThisContainer: function(eventTypePredicate,
