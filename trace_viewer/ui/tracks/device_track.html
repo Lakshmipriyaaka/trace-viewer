@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<!--
+Copyright (c) 2013 The Chromium Authors. All rights reserved.
+Use of this source code is governed by a BSD-style license that can be
+found in the LICENSE file.
+-->
+
+<link rel="stylesheet" href="/ui/tracks/process_track_base.css">
+
+<link rel="import" href="/ui/tracks/container_track.html">
+<link rel="import" href="/ui/tracks/counter_track.html">
+<link rel="import" href="/ui/tracks/frame_track.html">
+<link rel="import" href="/ui/tracks/object_instance_group_track.html">
+<link rel="import" href="/ui/tracks/process_summary_track.html">
+<link rel="import" href="/ui/tracks/spacing_track.html">
+<link rel="import" href="/ui/tracks/thread_track.html">
+<link rel="import" href="/core/filter.html">
+<link rel="import" href="/ui/ui.html">
+<link rel="import" href="/ui/base/dom_helpers.html">
+<link rel="import" href="/model/model_settings.html">
+
+<script>
+'use strict';
+
+tr.exportTo('tr.ui.tracks', function() {
+
+  var ContainerTrack = tr.ui.tracks.ContainerTrack;
+  var SpacingTrack = tr.ui.tracks.SpacingTrack;
+
+  // TODO(charliea): Make this track collapsible
+  /**
+   * Track to visualize the device.
+   * @constructor
+   */
+  var DeviceTrack = tr.ui.b.define('device-track', ContainerTrack);
+
+  DeviceTrack.prototype = {
+
+    __proto__: ContainerTrack.prototype,
+
+    decorate: function(viewport) {
+      ContainerTrack.prototype.decorate.call(this, viewport);
+      this.device_ = null;
+    },
+
+    get device() {
+      return this.device_;
+    },
+
+    set device(device) {
+      this.device_ = device;
+      this.updateContents_();
+    },
+
+    get hasVisibleContent() {
+      return (this.device_.powerCounter != null);
+    },
+
+    addContainersToTrackMap: function(containerToTrackMap) {
+      containerToTrackMap.addContainer(this.device, this);
+    },
+
+    addEventsToTrackMap: function(eventToTrackMap) {
+      this.tracks_.forEach(function(track) {
+        track.addEventsToTrackMap(eventToTrackMap);
+      }); 
+    },
+    
+    updateContents_: function() {
+      this.appendCounterTracks_();
+    },
+
+    appendCounterTracks_: function() {
+      // Add counter tracks for the device
+      var counters = tr.b.dictionaryValues(this.device.counters);
+      counters.sort(tr.model.Counter.compare);
+
+      counters.forEach(function(counter) {
+        var track = new tr.ui.tracks.CounterTrack(this.viewport);
+        track.counter = counter;
+        this.appendChild(track);
+        this.appendChild(new SpacingTrack(this.viewport));
+      }.bind(this));
+    }
+  };
+
+  return {
+    DeviceTrack: DeviceTrack
+  };
+});
+</script>

@@ -30,9 +30,6 @@ tr.exportTo('tr.model', function() {
 
     this.bounds = new tr.b.Range();
     this.guid = tr.b.GUID.allocate();
-
-    // Lazy-constructed counter measuring the instantaneous power consumption
-    // of the device, measured in mWh.
     this.powerCounter_ = null;
   };
 

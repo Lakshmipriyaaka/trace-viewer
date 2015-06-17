@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<!--
+Copyright (c) 2013 The Chromium Authors. All rights reserved.
+Use of this source code is governed by a BSD-style license that can be
+found in the LICENSE file.
+-->
+
+<link rel="import" href="/ui/analysis/analysis_view.html">
+<link rel="import" href="/ui/analysis/stub_analysis_results.html">
+<link rel="import" href="/core/test_utils.html">
+<link rel="import" href="/core/selection.html">
+<link rel="import" href="/model/model.html">
+<link rel="import" href="/model/counter.html">
+<link rel="import" href="/model/counter_series.html">
+<link rel="import" href="/model/model.html">
+<link rel="import" href="/model/kernel.html">
+<link rel="import" href="/ui/timeline_viewport.html">
+<link rel="import" href="/ui/tracks/device_track.html">
+<link rel="import" href="/ui/tracks/drawing_container.html">
+<link rel="import" href="/ui/tracks/event_to_track_map.html">
+
+<script>
+'use strict';
+
+tr.b.unittest.testSuite(function() {
+
+  var ContainerToTrackMap = tr.ui.tracks.ContainerToTrackMap;
+  var Counter = tr.model.Counter;
+  var CounterSeries = tr.model.CounterSeries;
+  var Device = tr.model.Device;
+  var DeviceTrack = tr.ui.tracks.DeviceTrack;
+  var EventToTrackMap = tr.ui.tracks.EventToTrackMap;
+  var Model = tr.Model;
+  var Viewport = tr.ui.TimelineViewport;
+      
+  test('instantiate', function() {
+    var device = new Device(new Model());
+    device.powerCounter = new Counter(device, 'a.B', 'a', 'B');
+
+    var series = new CounterSeries('a', 0);
+    device.powerCounter.addSeries(series);
+    series.addCounterSample(100, 5);
+    series.addCounterSample(200, 7);
+    series.addCounterSample(300, 9);
+    series.addCounterSample(400, 7);
+    
+    device.updateBounds();
+
+    var div = document.createElement('div');
+    var viewport = new Viewport(div);
+    var drawingContainer = new tr.ui.tracks.DrawingContainer(viewport);
+    div.appendChild(drawingContainer);
+    
+    var deviceTrack = new DeviceTrack(viewport);
+    deviceTrack.device = device;
+    drawingContainer.appendChild(deviceTrack);
+
+    this.addHTMLOutput(div);
+    drawingContainer.invalidate();
+    drawingContainer.invalidate();
+  });
+
+  
+  test("hasVisibleContents_trueWithPowerCounterPresent", function() {
+    var device = new Device(new Model());
+    device.powerCounter = new Counter(device, 'a.B', 'a', 'B');
+
+    var series = new CounterSeries('a', 0);
+    device.powerCounter.addSeries(series);
+    series.addCounterSample(100, 5);
+    series.addCounterSample(200, 7);
+    series.addCounterSample(300, 9);
+    series.addCounterSample(400, 7);
+    
+    device.updateBounds();
+
+    var viewport = new Viewport(document.createElement('div'));
+    var deviceTrack = new DeviceTrack(viewport);
+    deviceTrack.device = device;
+    
+    assert.isTrue(deviceTrack.hasVisibleContent);
+  });
+  
+  test("hasVisibleContents_falseWithNoPowerCounterPresent", function() {
+    var device = new Device(new Model());
+
+    var viewport = new Viewport(document.createElement('div'));
+    var deviceTrack = new DeviceTrack(viewport);
+    deviceTrack.device = device;
+    
+    assert.isFalse(deviceTrack.hasVisibleContent);
+  });
+
+  test("addContainersToTrackMap", function() {
+    var viewport = new Viewport(document.createElement('div'));
+    var deviceTrack = new DeviceTrack(viewport);
+    deviceTrack.device = new Device(new Model());
+
+    var containerToTrackMap = new ContainerToTrackMap();
+    deviceTrack.addContainersToTrackMap(containerToTrackMap);
+    
+    assert.equal(containerToTrackMap.getTrackByStableId('Device'), deviceTrack);
+  });
+
+  test("addEventsToTrackMap", function() {
+    var viewport = new Viewport(document.createElement('div'));
+    var deviceTrack = new DeviceTrack(viewport);
+    var device = new Device(new Model());
+    device.powerCounter = new Counter(device, 'a.B', 'a', 'B');
+    var series = new CounterSeries('a', 0);
+    device.powerCounter.addSeries(series);
+    series.addCounterSample(100, 5);
+    series.addCounterSample(200, 7);
+    deviceTrack.device = device;
+
+    var eventToTrackMap = new EventToTrackMap();
+    deviceTrack.addEventsToTrackMap(eventToTrackMap);
+
+    var expected = new EventToTrackMap();
+    expected[device.powerCounter.series[0].samples[0].guid] =
+        deviceTrack.tracks_[0];
+    expected[device.powerCounter.series[0].samples[1].guid] =
+        deviceTrack.tracks_[0];
+
+    assert.deepEqual(eventToTrackMap, expected);
+  });
+});
+</script>
