@@ -5,15 +5,9 @@ Use of this source code is governed by a BSD-style license that can be
 found in the LICENSE file.
 -->
 
-<link rel="import" href="/ui/analysis/analysis_view.html">
-<link rel="import" href="/ui/analysis/stub_analysis_results.html">
-<link rel="import" href="/core/test_utils.html">
-<link rel="import" href="/core/selection.html">
-<link rel="import" href="/model/model.html">
 <link rel="import" href="/model/counter.html">
 <link rel="import" href="/model/counter_series.html">
 <link rel="import" href="/model/model.html">
-<link rel="import" href="/model/kernel.html">
 <link rel="import" href="/ui/timeline_viewport.html">
 <link rel="import" href="/ui/tracks/device_track.html">
 <link rel="import" href="/ui/tracks/drawing_container.html">
@@ -59,6 +53,37 @@ tr.b.unittest.testSuite(function() {
     drawingContainer.invalidate();
   });
 
+  test('setPowerCounter_clearsTrackBeforeUpdating', function() {
+    var device = new Device(new Model());
+    device.powerCounter = new Counter(device, 'a.B', 'a', 'B');
+
+    var series = new CounterSeries('a', 0);
+    device.powerCounter.addSeries(series);
+    series.addCounterSample(100, 5);
+    series.addCounterSample(200, 7);
+    series.addCounterSample(300, 9);
+    series.addCounterSample(400, 7);
+    
+    device.updateBounds();
+
+    var div = document.createElement('div');
+    var viewport = new Viewport(div);
+    var drawingContainer = new tr.ui.tracks.DrawingContainer(viewport);
+    div.appendChild(drawingContainer);
+
+    // Set the device twice, and make sure that this doesn't result in
+    // the tracks being added twice
+    var deviceTrack = new DeviceTrack(viewport);
+    deviceTrack.device = device;
+    deviceTrack.device = device;
+    drawingContainer.appendChild(deviceTrack);
+
+    this.addHTMLOutput(div);
+    drawingContainer.invalidate();
+
+    // Should have two tracks - one counter track and one spacing track
+    assert.equal(deviceTrack.tracks_.length, 2);
+  });
   
   test("hasVisibleContents_trueWithPowerCounterPresent", function() {
     var device = new Device(new Model());

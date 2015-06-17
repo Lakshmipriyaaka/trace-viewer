@@ -8,7 +8,6 @@ found in the LICENSE file.
 <link rel="import" href="/model/counter.html">
 <link rel="import" href="/model/counter_series.html">
 <link rel="import" href="/model/model.html">
-<link rel="import" href="/model/kernel.html">
 
 <script>
 'use strict';
@@ -65,9 +64,7 @@ tr.b.unittest.testSuite(function() {
 
     device.powerCounter = new Counter(device, 'a.B', 'a', 'B');
     
-    var expectedDict = {
-      'a': true,
-    };
+    var expectedDict = { 'a': true };
     var actualDict = {};
     device.addCategoriesToDict(actualDict);
     
@@ -77,7 +74,7 @@ tr.b.unittest.testSuite(function() {
   test('iterateAllChildEventContainers', function() {
     var device = new Device(new Model());
 
-    // Doesn't include the power counter if no one has accessed it
+    // Shouldn't iterate over anything until we set the power counter
     var expectedIds = [];
     var actualIds = [];
     device.iterateAllChildEventContainers(function(child) {
@@ -86,6 +83,7 @@ tr.b.unittest.testSuite(function() {
 
     assert.deepEqual(actualIds, expectedIds);
 
+    // Should include the power counter after we set it
     device.powerCounter = new Counter(device, 'a.B', 'a', 'power');
     
     var expectedIds = ['a.B'];
