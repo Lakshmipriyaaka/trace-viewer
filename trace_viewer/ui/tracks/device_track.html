@@ -9,6 +9,12 @@ found in the LICENSE file.
 <link rel="import" href="/ui/tracks/counter_track.html">
 <link rel="import" href="/ui/tracks/spacing_track.html">
 
+<style>
+#powerTrack {
+  height: 90px;
+}
+</style>
+
 <script>
 'use strict';
 
@@ -23,7 +29,8 @@ tr.exportTo('tr.ui.tracks', function() {
    * @constructor
    */
   var DeviceTrack = tr.ui.b.define('device-track', ContainerTrack);
-
+  var POWER_TRACK_ID = "powerTrack";
+  
   DeviceTrack.prototype = {
 
     __proto__: ContainerTrack.prototype,
@@ -53,20 +60,17 @@ tr.exportTo('tr.ui.tracks', function() {
     addEventsToTrackMap: function(eventToTrackMap) {
       this.tracks_.forEach(function(track) {
         track.addEventsToTrackMap(eventToTrackMap);
-      });
+      }); 
     },
 
     appendCounterTracks_: function() {
-      // Add counter tracks for the device
-      var counters = tr.b.dictionaryValues(this.device.counters);
-      counters.sort(tr.model.Counter.compare);
-
-      counters.forEach(function(counter) {
+      if (this.device_.powerCounter != null) {
         var track = new tr.ui.tracks.CounterTrack(this.viewport);
-        track.counter = counter;
+        track.counter = this.device_.powerCounter;
+        track.id = POWER_TRACK_ID;
         this.appendChild(track);
         this.appendChild(new SpacingTrack(this.viewport));
-      }.bind(this));
+      }
     },
 
     clearTracks_: function() {
@@ -74,7 +78,7 @@ tr.exportTo('tr.ui.tracks', function() {
         this.removeChild(track);
       }, this);
     },
-
+    
     updateContents_: function() {
       this.clearTracks_();
       this.appendCounterTracks_();
