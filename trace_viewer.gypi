@@ -246,6 +246,7 @@
       'trace_viewer/model/object_collection.html',
       'trace_viewer/model/object_instance.html',
       'trace_viewer/model/object_snapshot.html',
+      'trace_viewer/model/power_sample.html',
       'trace_viewer/model/process.html',
       'trace_viewer/model/process_base.html',
       'trace_viewer/model/process_memory_dump.html',
