@@ -13,10 +13,20 @@ found in the LICENSE file.
 
 tr.exportTo('tr.model', function() {
 
+  /**
+   * A sample that contains power information.
+   *
+   * NOTE: This exists as a separate event type so that we can have a custom
+   * analysis view when power samples are selected.
+   *
+   * @constructor
+   * @extends {CounterSample}
+   */
+
   function PowerSample(series, timestamp, value) {
     tr.model.CounterSample.call(this, series, timestamp, value);
   }
-  
+
   PowerSample.prototype = {
     __proto__: tr.model.CounterSample.prototype,
   };
@@ -37,4 +47,3 @@ tr.exportTo('tr.model', function() {
   };
 });
 </script>
-
