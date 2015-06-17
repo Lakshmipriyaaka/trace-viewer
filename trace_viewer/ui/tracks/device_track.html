@@ -30,7 +30,7 @@ tr.exportTo('tr.ui.tracks', function() {
    */
   var DeviceTrack = tr.ui.b.define('device-track', ContainerTrack);
   var POWER_TRACK_ID = "powerTrack";
-  
+
   DeviceTrack.prototype = {
 
     __proto__: ContainerTrack.prototype,
@@ -60,7 +60,7 @@ tr.exportTo('tr.ui.tracks', function() {
     addEventsToTrackMap: function(eventToTrackMap) {
       this.tracks_.forEach(function(track) {
         track.addEventsToTrackMap(eventToTrackMap);
-      }); 
+      });
     },
 
     appendCounterTracks_: function() {
@@ -78,7 +78,7 @@ tr.exportTo('tr.ui.tracks', function() {
         this.removeChild(track);
       }, this);
     },
-    
+
     updateContents_: function() {
       this.clearTracks_();
       this.appendCounterTracks_();
