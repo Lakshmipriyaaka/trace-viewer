@@ -23,7 +23,9 @@ tr.b.unittest.testSuite(function() {
   test('updateBounds', function() {
     var device = new Device(new Model());
     device.powerCounter = new Counter(device, 'a.B', 'a', 'B');
-    // Verify that the bounds match the lowest and highest counters
+
+    // Verify that the bounds match the lowest and highest counter sample
+    // timestamps
     var series = new CounterSeries('a', 0);
     device.powerCounter.addSeries(series);
     series.addCounterSample(100, 5);
@@ -34,7 +36,7 @@ tr.b.unittest.testSuite(function() {
     assert.equal(device.bounds.min, 100);
     assert.equal(device.bounds.max, 200);
 
-    // Add a new value and verify that the bounds change
+    // Add a new sample and verify that the bounds change
     series.addCounterSample(700, 5);
 
     device.updateBounds();
@@ -45,8 +47,7 @@ tr.b.unittest.testSuite(function() {
   test('shiftTimestampsForward', function() {
     var device = new Device(new Model());
 
-    device.powerCounter =
-        new Counter(device, 'a.B', 'a', 'B');
+    device.powerCounter = new Counter(device, 'a.B', 'a', 'B');
     
     var series = new CounterSeries('a', 0);
     device.powerCounter.addSeries(series);
@@ -85,7 +86,6 @@ tr.b.unittest.testSuite(function() {
 
     assert.deepEqual(actualIds, expectedIds);
 
-    // Access the power counter to lazily initialize it
     device.powerCounter = new Counter(device, 'a.B', 'a', 'power');
     
     var expectedIds = ['a.B'];

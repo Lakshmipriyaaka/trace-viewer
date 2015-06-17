@@ -6,6 +6,7 @@ found in the LICENSE file.
 -->
 
 <link rel="import" href="/importer/importer.html">
+<link rel="import" href="/model/counter.html">
 <link rel="import" href="/model/model.html">
 
 <script>
@@ -19,6 +20,8 @@ found in the LICENSE file.
 'use strict';
 
 tr.exportTo('tr.e.importer.battor', function() {
+
+  var Counter = tr.model.Counter;
   var Importer = tr.importer.Importer;
 
   /**
@@ -89,8 +92,12 @@ tr.exportTo('tr.e.importer.battor', function() {
         return;
       }
 
+      // TODO(charliea): A test should be failing due to this...
       // Add a counter for power to the GUI.
-      var ctr = this.model_.kernel.getOrCreateCounter(null, 'Power');
+      var ctr = new Counter(
+          this.model_.device, 'device.Power', 'device', 'Power');
+      this.model_.device.powerCounter = ctr;
+
       if (ctr.numSeries === 0) {
         ctr.addSeries(series);
       }
@@ -134,6 +141,11 @@ tr.exportTo('tr.e.importer.battor', function() {
           var time = parseFloat(groups[1]) + minTs;
           var voltage_mV = parseFloat(groups[2]);
           var current_mA = parseFloat(groups[3]);
+
+          // TODO(charliea): Make a PowerSample class and add this to the
+          // series instead of just adding a normal sample. This will allow
+          // us to have a custom analysis pane when the power samples are
+          // selected.
           series.addCounterSample(time, (voltage_mV * current_mA) / 1000);
         }
       }, this);
@@ -245,3 +257,4 @@ tr.exportTo('tr.e.importer.battor', function() {
 });
 
 </script>
+es
