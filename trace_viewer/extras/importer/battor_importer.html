@@ -140,12 +140,9 @@ tr.exportTo('tr.e.importer.battor', function() {
           var time = parseFloat(groups[1]) + minTs;
           var voltage_mV = parseFloat(groups[2]);
           var current_mA = parseFloat(groups[3]);
+          var power_mW = (voltage_mV * current_mA) / 1000);
 
-          // TODO(charliea): Make a PowerSample class and add this to the
-          // series instead of just adding a normal sample. This will allow
-          // us to have a custom analysis pane when the power samples are
-          // selected.
-          series.addCounterSample(time, (voltage_mV * current_mA) / 1000);
+          series.addSample(new PowerSample(series, time, power_mW);
         }
       }, this);
     },
