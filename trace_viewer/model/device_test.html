@@ -47,7 +47,7 @@ tr.b.unittest.testSuite(function() {
     var device = new Device(new Model());
 
     device.powerCounter = new Counter(device, 'a.B', 'a', 'B');
-    
+
     var series = new CounterSeries('a', 0);
     device.powerCounter.addSeries(series);
     series.addCounterSample(100, 5);
@@ -63,11 +63,11 @@ tr.b.unittest.testSuite(function() {
     var device = new Device(new Model());
 
     device.powerCounter = new Counter(device, 'a.B', 'a', 'B');
-    
+
     var expectedDict = { 'a': true };
     var actualDict = {};
     device.addCategoriesToDict(actualDict);
-    
+
     assert.deepEqual(actualDict, expectedDict);
   });
 
@@ -85,7 +85,7 @@ tr.b.unittest.testSuite(function() {
 
     // Should include the power counter after we set it
     device.powerCounter = new Counter(device, 'a.B', 'a', 'power');
-    
+
     var expectedIds = ['a.B'];
     var actualIds = [];
     device.iterateAllChildEventContainers(function(child) {

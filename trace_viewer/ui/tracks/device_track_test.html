@@ -5,13 +5,13 @@ Use of this source code is governed by a BSD-style license that can be
 found in the LICENSE file.
 -->
 
-<link rel="import" href="/model/counter.html">
-<link rel="import" href="/model/counter_series.html">
-<link rel="import" href="/model/model.html">
-<link rel="import" href="/ui/timeline_viewport.html">
-<link rel="import" href="/ui/tracks/device_track.html">
-<link rel="import" href="/ui/tracks/drawing_container.html">
-<link rel="import" href="/ui/tracks/event_to_track_map.html">
+<link rel='import' href='/model/counter.html'>
+<link rel='import' href='/model/counter_series.html'>
+<link rel='import' href='/model/model.html'>
+<link rel='import' href='/ui/timeline_viewport.html'>
+<link rel='import' href='/ui/tracks/device_track.html'>
+<link rel='import' href='/ui/tracks/drawing_container.html'>
+<link rel='import' href='/ui/tracks/event_to_track_map.html'>
 
 <script>
 'use strict';
@@ -26,7 +26,7 @@ tr.b.unittest.testSuite(function() {
   var EventToTrackMap = tr.ui.tracks.EventToTrackMap;
   var Model = tr.Model;
   var Viewport = tr.ui.TimelineViewport;
-      
+
   test('instantiate', function() {
     var device = new Device(new Model());
     device.powerCounter = new Counter(device, 'a.B', 'a', 'B');
@@ -37,14 +37,14 @@ tr.b.unittest.testSuite(function() {
     series.addCounterSample(200, 7);
     series.addCounterSample(300, 9);
     series.addCounterSample(400, 7);
-    
+
     device.updateBounds();
 
     var div = document.createElement('div');
     var viewport = new Viewport(div);
     var drawingContainer = new tr.ui.tracks.DrawingContainer(viewport);
     div.appendChild(drawingContainer);
-    
+
     var deviceTrack = new DeviceTrack(viewport);
     deviceTrack.device = device;
     drawingContainer.appendChild(deviceTrack);
@@ -63,7 +63,7 @@ tr.b.unittest.testSuite(function() {
     series.addCounterSample(200, 7);
     series.addCounterSample(300, 9);
     series.addCounterSample(400, 7);
-    
+
     device.updateBounds();
 
     var div = document.createElement('div');
@@ -84,8 +84,8 @@ tr.b.unittest.testSuite(function() {
     // Should have two tracks - one counter track and one spacing track
     assert.equal(deviceTrack.tracks_.length, 2);
   });
-  
-  test("hasVisibleContents_trueWithPowerCounterPresent", function() {
+
+  test('hasVisibleContents_trueWithPowerCounterPresent', function() {
     var device = new Device(new Model());
     device.powerCounter = new Counter(device, 'a.B', 'a', 'B');
 
@@ -95,38 +95,38 @@ tr.b.unittest.testSuite(function() {
     series.addCounterSample(200, 7);
     series.addCounterSample(300, 9);
     series.addCounterSample(400, 7);
-    
+
     device.updateBounds();
 
     var viewport = new Viewport(document.createElement('div'));
     var deviceTrack = new DeviceTrack(viewport);
     deviceTrack.device = device;
-    
+
     assert.isTrue(deviceTrack.hasVisibleContent);
   });
-  
-  test("hasVisibleContents_falseWithNoPowerCounterPresent", function() {
+
+  test('hasVisibleContents_falseWithNoPowerCounterPresent', function() {
     var device = new Device(new Model());
 
     var viewport = new Viewport(document.createElement('div'));
     var deviceTrack = new DeviceTrack(viewport);
     deviceTrack.device = device;
-    
+
     assert.isFalse(deviceTrack.hasVisibleContent);
   });
 
-  test("addContainersToTrackMap", function() {
+  test('addContainersToTrackMap', function() {
     var viewport = new Viewport(document.createElement('div'));
     var deviceTrack = new DeviceTrack(viewport);
     deviceTrack.device = new Device(new Model());
 
     var containerToTrackMap = new ContainerToTrackMap();
     deviceTrack.addContainersToTrackMap(containerToTrackMap);
-    
+
     assert.equal(containerToTrackMap.getTrackByStableId('Device'), deviceTrack);
   });
 
-  test("addEventsToTrackMap", function() {
+  test('addEventsToTrackMap', function() {
     var viewport = new Viewport(document.createElement('div'));
     var deviceTrack = new DeviceTrack(viewport);
     var device = new Device(new Model());

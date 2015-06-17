@@ -372,6 +372,7 @@
       'trace_viewer/ui/tracks/container_track.html',
       'trace_viewer/ui/tracks/counter_track.html',
       'trace_viewer/ui/tracks/cpu_track.html',
+      'trace_viewer/ui/tracks/device_track.html',
       'trace_viewer/ui/tracks/drawing_container.html',
       'trace_viewer/ui/tracks/event_to_track_map.html',
       'trace_viewer/ui/tracks/frame_track.html',
